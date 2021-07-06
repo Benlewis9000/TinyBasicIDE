@@ -1,6 +1,6 @@
-package ide;
+package io.benlewis.tinybasicide;
 
-import javafx.event.ActionEvent;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -41,6 +41,11 @@ public class EditorController implements Initializable {
     @FXML
     private Text textFeedback;
 
+    /**
+     * Initialise a controller and its components.
+     * @param url The location used to resolve relative paths for the root object, or null if the location is not known
+     * @param resourceBundle The resources used to localize the root object, or null if the root object was not localized
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -49,25 +54,52 @@ public class EditorController implements Initializable {
         textFieldGccCompiler.setText("C:\\Qt\\Tools\\mingw810_64\\bin\\x86_64-w64-mingw32-gcc.exe");
         textFieldTbCompiler.setText("C:\\Users\\benja\\source\\repos\\TinyBASIC_Compiler\\x64\\Debug\\TinyBASIC_Compiler.exe");
 
+        // Load monospaced font
         Font mono = Font.loadFont(App.class.getResourceAsStream("/JetBrainsMono-Regular.ttf"), 16);
+        // Configure text areas
         textAreaSource.setFont(mono);
         textAreaProgram.setEditable(false);
-        textAreaProgram.setStyle("-fx-opacity: 1;");
         textAreaProgram.setFont(mono);
         textAreaInfo.setEditable(false);
-        textAreaInfo.setStyle("-fx-opacity: 1;");
         textAreaInfo.setFont(mono);
 
     }
 
+    /**
+     * Disable the Compile and Run buttons.
+     */
+    public void lockButtons(){
+        Platform.runLater(() -> {
+            buttonCompile.setDisable(true);
+            buttonRun.setDisable(true);
+        });
+    }
+
+    /**
+     * Enable the Compile and Run buttons.
+     */
+    public void unlockButtons(){
+        Platform.runLater(() -> {
+            buttonCompile.setDisable(false);
+            buttonRun.setDisable(false);
+        });
+    }
+
+    /**
+     * Attempt to compile tiny basic source in IDE.
+     */
     @FXML
-    void buttonCompileAction(ActionEvent event){
+    void buttonCompileAction(){
 
-        System.out.println("buttonCompilePressed");
+        // Lock sensitive buttons on GUI
+        lockButtons();
 
+        // Get app instance
         App app = App.getInstance();
+        // Set program status
         app.setProgramStatus(App.ProgramStatus.COMPILING);
 
+        // Clear all text areas
         resetFeedback();
         textAreaProgram.setText("");
         textAreaInfo.setText("");
@@ -80,6 +112,7 @@ public class EditorController implements Initializable {
         app.setWorkspace(new Workspace(workingDir, gccCompiler, tbCompiler, tbSource));
 
         try {
+            // Save tiny basic source to file
             TinyBasicCompiler.saveStringToFile(
                     Paths.get(app.getWorkspace().getRootPath().toString(), "source.tb"),
                     app.getWorkspace().getTbSource()
@@ -90,15 +123,20 @@ public class EditorController implements Initializable {
         }
 
         try {
-
             // Pass files to TB compiler
             if (TinyBasicCompiler.compile(
                         app.getWorkspace(),
                         this.textAreaInfo
                     )) {
+                // Update program status
                 app.setProgramStatus(App.ProgramStatus.READY);
+                Platform.runLater(() -> {
+                    textAreaInfo.appendText("Compiled successfully." + System.lineSeparator());
+                });
             }
-
+            else {
+                errorFeedback("ERROR: Compilation failed.");
+            }
         }
         catch (IOException e){
             errorFeedback("ERROR: Compilation failed (IOException).");
@@ -113,20 +151,28 @@ public class EditorController implements Initializable {
 
     }
 
+    /**
+     * Attempt to run tiny basic program.
+     */
     @FXML
     void buttonRunAction(){
 
+        // Lock sensitive buttons on GUI
+        lockButtons();
+
+        // Reset text areas
         resetFeedback();
         textAreaProgram.setText("");
 
         App app = App.getInstance();
 
-        if (App.getInstance().getProgramStatus() == App.ProgramStatus.READY) {
+        if (app.getProgramStatus() == App.ProgramStatus.READY) {
 
             try {
-
-                Path program = Paths.get(App.getInstance().getWorkspace().getRootPath().toString(), "program.exe");
-                TinyBasicCompiler.run(program, textAreaProgram, textAreaInfo);
+                // Get path to program executable
+                Path program = Paths.get(app.getWorkspace().getRootPath().toString(), "program.exe");
+                // Run executable
+                TinyBasicCompiler.run(program, textAreaProgram);
 
             } catch (IOException e) {
                 errorFeedback("ERROR: Could open program.");
@@ -143,6 +189,9 @@ public class EditorController implements Initializable {
 
     }
 
+    /**
+     * Attempt to load a workspace from the path provided in the text field.
+     */
     @FXML
     void buttonLoadAction(){
 
@@ -178,8 +227,12 @@ public class EditorController implements Initializable {
 
     }
 
+    /**
+     * Attempt to save current IDE workspace to file.
+     * @return
+     */
     @FXML
-    boolean buttonSaveAction(){
+    void buttonSaveAction(){
 
         resetFeedback();
 
@@ -197,22 +250,27 @@ public class EditorController implements Initializable {
             workspace.save(workingDir);
             App.getInstance().setWorkspace(workspace);
             textFeedback.setText("Saved workspace.");
-            return true;
         }
         catch(IOException e){
             textFeedback.setFill(Color.RED);
             textFeedback.setText("ERROR: Failed to save workspace.");
             System.err.printf("Failed to save a workspace to \"%s\".\n%s\n", workingDir.toString(), e.toString());
-            return false;
         }
 
     }
 
+    /**
+     * Reset the feedback text component.
+     */
     public void resetFeedback(){
         textFeedback.setFill(Color.BLACK);
         textFeedback.setText("");
     }
 
+    /**
+     * Display an error message on the text component.
+     * @param error message to display
+     */
     public void errorFeedback(String error){
         textFeedback.setFill(Color.RED);
         textFeedback.setText(error);
