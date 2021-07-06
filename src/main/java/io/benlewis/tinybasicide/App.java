@@ -1,4 +1,4 @@
-package ide;
+package io.benlewis.tinybasicide;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,13 +11,14 @@ import java.io.IOException;
 public class App extends Application {
 
     public enum ProgramStatus {
-        NONE, READY, COMPILING, RUNNING
+        NONE, READY, COMPILING
     }
 
     private static App instance;
 
     private Stage stage;
     private Scene editorScene;
+    private FXMLLoader editorLoader;
 
     private Workspace workspace = null;
 
@@ -37,6 +38,10 @@ public class App extends Application {
 
     public static App getInstance(){
         return instance;
+    }
+
+    public FXMLLoader getEditorLoader(){
+        return editorLoader;
     }
 
     public Workspace getWorkspace() {
@@ -61,7 +66,8 @@ public class App extends Application {
 
         try {
             // Load view
-            Parent editorRoot = FXMLLoader.load(this.getClass().getResource("/EditorView.fxml"));
+            this.editorLoader = new FXMLLoader(this.getClass().getResource("/EditorView.fxml"));
+            Parent editorRoot = editorLoader.load();
             this.editorScene = new Scene(editorRoot, 1200, 800);
         }
         catch (IOException e){
@@ -71,6 +77,7 @@ public class App extends Application {
             System.exit(1);
         }
 
+        // Configure stage
         stage.setScene(editorScene);
         stage.setTitle("Tiny Basic IDE");
         stage.setMaxWidth(1220);
