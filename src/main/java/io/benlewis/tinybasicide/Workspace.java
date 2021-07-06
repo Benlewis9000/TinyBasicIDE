@@ -1,4 +1,4 @@
-package ide;
+package io.benlewis.tinybasicide;
 
 import com.google.gson.Gson;
 
@@ -14,7 +14,6 @@ public class Workspace {
     private String rootPath;
     private String gccCompilerPath;
     private String tbCompilerPath;
-//    private Path tbSourcePath;
     private String tbSource;
 
     public Path getRootPath() {
@@ -49,12 +48,18 @@ public class Workspace {
         this.tbSource = tbSource;
     }
 
+    /**
+     * Workspace constructor.
+     * @param rootPath path to root directory of workspace where files will be stored
+     * @param gccCompilerPath path to GCC compiler
+     * @param tbCompilerPath path to Tiny Basic compiler
+     * @param tbSource tiny basic source code
+     */
     public Workspace(Path rootPath, Path gccCompilerPath, Path tbCompilerPath, String tbSource){
 
         this.rootPath = rootPath.toString();
         this.gccCompilerPath = gccCompilerPath.toString();
         this.tbCompilerPath = tbCompilerPath.toString();
-//        this.tbSourcePath = Paths.get(rootPath.toString(), "source.tb");
         this.tbSource = tbSource;
 
     }
@@ -101,7 +106,7 @@ public class Workspace {
 
         // Build string of config contents
         StringBuilder sb = new StringBuilder();
-        // TODO: change to BufferedReader
+
         while(scanner.hasNextLine())
             sb.append(scanner.nextLine() + System.getProperty("line.separator"));
 
