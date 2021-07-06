@@ -9,5 +9,8 @@
         <module name="ExeTest" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="TinyBasicIDE" target="14" />
+    </bytecodeTargetLevel>
   </component>
 </project>
