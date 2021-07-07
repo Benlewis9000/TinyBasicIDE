@@ -33,6 +33,8 @@ public class EditorController implements Initializable {
     @FXML
     private Button buttonSave;
     @FXML
+    private Button buttonKill;
+    @FXML
     private TextArea textAreaSource;
     @FXML
     private TextArea textAreaProgram;
@@ -51,8 +53,8 @@ public class EditorController implements Initializable {
 
         // TODO: delete, for faster testing
         textFieldWorkingDir.setText("C:\\Users\\benja\\Desktop\\JnaTest\n");
-        textFieldGccCompiler.setText("C:\\Qt\\Tools\\mingw810_64\\bin\\x86_64-w64-mingw32-gcc.exe");
-        textFieldTbCompiler.setText("C:\\Users\\benja\\source\\repos\\TinyBASIC_Compiler\\x64\\Debug\\TinyBASIC_Compiler.exe");
+       /* textFieldGccCompiler.setText("C:\\Qt\\Tools\\mingw810_64\\bin\\x86_64-w64-mingw32-gcc.exe");
+        textFieldTbCompiler.setText("C:\\Users\\benja\\source\\repos\\TinyBASIC_Compiler\\x64\\Debug\\TinyBASIC_Compiler.exe");*/
 
         // Load monospaced font
         Font mono = Font.loadFont(App.class.getResourceAsStream("/JetBrainsMono-Regular.ttf"), 16);
@@ -120,6 +122,8 @@ public class EditorController implements Initializable {
         }
         catch (IOException e){
             errorFeedback("ERROR: Compilation failed. Could not save source code (IOException).");
+            unlockButtons();
+            return;
         }
 
         try {
@@ -131,22 +135,25 @@ public class EditorController implements Initializable {
                 // Update program status
                 app.setProgramStatus(App.ProgramStatus.READY);
                 Platform.runLater(() -> {
-                    textAreaInfo.appendText("Compiled successfully." + System.lineSeparator());
+                    textAreaInfo.appendText(System.lineSeparator() + "Executable compiled successfully." + System.lineSeparator());
                 });
             }
             else {
                 errorFeedback("ERROR: Compilation failed.");
+                unlockButtons();
             }
         }
         catch (IOException e){
             errorFeedback("ERROR: Compilation failed (IOException).");
             app.setProgramStatus(App.ProgramStatus.NONE);
             System.err.printf("IOException during compilation. Cancelling.\n%s\n", e.toString());
+            unlockButtons();
         }
         catch (InterruptedException e){
             errorFeedback("ERROR: Compilation failed (InterruptedException).");
             app.setProgramStatus(App.ProgramStatus.NONE);
             System.err.printf("Compilation unexpectedly interrupted. Cancelling.\n%s\n", e.toString());
+            unlockButtons();
         }
 
     }
@@ -177,14 +184,17 @@ public class EditorController implements Initializable {
             } catch (IOException e) {
                 errorFeedback("ERROR: Could open program.");
                 System.err.printf("Could not open program.\n%s\n", e.toString());
+                unlockButtons();
             } catch (InterruptedException e) {
                 errorFeedback("ERROR: Program execution interrupted.");
                 System.err.printf("Program unexpectedly interrupted.\n%s\n", e.toString());
+                unlockButtons();
             }
 
         }
         else {
             textFeedback.setText("Please compile your program before running it.");
+            unlockButtons();
         }
 
     }
@@ -229,7 +239,6 @@ public class EditorController implements Initializable {
 
     /**
      * Attempt to save current IDE workspace to file.
-     * @return
      */
     @FXML
     void buttonSaveAction(){
@@ -255,6 +264,21 @@ public class EditorController implements Initializable {
             textFeedback.setFill(Color.RED);
             textFeedback.setText("ERROR: Failed to save workspace.");
             System.err.printf("Failed to save a workspace to \"%s\".\n%s\n", workingDir.toString(), e.toString());
+        }
+
+    }
+
+    /**
+     * Attempt to kill any running program process on the applications main instance.
+     */
+    @FXML
+    void buttonKillAction(){
+
+        if (App.getInstance().killProgram()) {
+            textFeedback.setText("Successfully killed program.");
+        }
+        else {
+            textFeedback.setText("Could not find a program to kill.");
         }
 
     }

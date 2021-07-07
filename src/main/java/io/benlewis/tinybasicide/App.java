@@ -19,6 +19,7 @@ public class App extends Application {
     private Stage stage;
     private Scene editorScene;
     private FXMLLoader editorLoader;
+    private Process program;
 
     private Workspace workspace = null;
 
@@ -56,10 +57,37 @@ public class App extends Application {
         this.programStatus = programStatus;
     }
 
+    public void setProgram(Process process){
+        this.program = process;
+    }
+
     public void setWorkspace(Workspace workspace) {
         this.workspace = workspace;
     }
 
+    /**
+     * Kill any running program process and set the variable to null.
+     * @return true if a process was found and killed
+     */
+    public boolean killProgram(){
+
+        // Null check program
+        if (program != null){
+            // Destroy process if alive
+            if (program.isAlive()) {
+                program.destroy();
+                return true;
+            }
+            program = null;
+        }
+
+        return false;
+    }
+
+    /**
+     * Initialise the JavaFX GUI stage and display it.
+     * @param stage to display.
+     */
     public void start(Stage stage) {
 
         this.stage = stage;
@@ -91,6 +119,8 @@ public class App extends Application {
     public static void main(String[] args){
 
         launch(args);
+        // Destroy program if still running
+        App.getInstance().killProgram();
 
     }
 

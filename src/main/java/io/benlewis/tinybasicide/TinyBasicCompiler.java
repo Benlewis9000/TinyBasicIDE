@@ -96,6 +96,8 @@ public class TinyBasicCompiler {
                     programPath.toString()
             ).redirectErrorStream(true).start();
 
+        App.getInstance().setProgram(program);
+
         // Redirect output to text area
         IODirector.redirectIO(program.getInputStream(), textAreaOutput);
 
