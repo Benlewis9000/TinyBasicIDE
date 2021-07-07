@@ -116,12 +116,12 @@
                                              <children>
                                                 <StackPane prefHeight="150.0" prefWidth="200.0">
                                                    <children>
-                                                      <Button fx:id="buttonSave" mnemonicParsing="false" onAction="#buttonSaveAction" prefWidth="120.0" text="Save" StackPane.alignment="CENTER_RIGHT">
+                                                      <Button fx:id="buttonSave" mnemonicParsing="false" onAction="#buttonSaveAction" prefWidth="120.0" text="Save" StackPane.alignment="CENTER">
                                                          <font>
                                                             <Font name="System Bold" size="16.0" />
                                                          </font>
                                                          <StackPane.margin>
-                                                            <Insets right="20.0" />
+                                                            <Insets />
                                                          </StackPane.margin>
                                                       </Button>
                                                    </children>
@@ -140,13 +140,22 @@
                                                 </StackPane>
                                                 <StackPane prefHeight="20.0" prefWidth="200.0">
                                                    <children>
-                                                      <Button fx:id="buttonRun" maxHeight="-Infinity" mnemonicParsing="false" onAction="#buttonRunAction" prefHeight="20.0" prefWidth="120.0" text="Run" textAlignment="CENTER" StackPane.alignment="CENTER_LEFT">
+                                                      <Button fx:id="buttonRun" maxHeight="-Infinity" mnemonicParsing="false" onAction="#buttonRunAction" prefHeight="20.0" prefWidth="120.0" text="Run" textAlignment="CENTER" StackPane.alignment="CENTER">
                                                          <font>
                                                             <Font name="System Bold" size="16.0" />
                                                          </font>
                                                          <StackPane.margin>
-                                                            <Insets left="20.0" />
+                                                            <Insets />
                                                          </StackPane.margin>
+                                                      </Button>
+                                                   </children>
+                                                </StackPane>
+                                                <StackPane prefHeight="150.0" prefWidth="200.0">
+                                                   <children>
+                                                      <Button fx:id="buttonKill" mnemonicParsing="false" onAction="#buttonKillAction" prefWidth="120.0" text="Kill">
+                                                         <font>
+                                                            <Font name="System Bold" size="16.0" />
+                                                         </font>
                                                       </Button>
                                                    </children>
                                                 </StackPane>
@@ -156,6 +165,9 @@
                                        <VBox.margin>
                                           <Insets top="10.0" />
                                        </VBox.margin>
+                                       <padding>
+                                          <Insets left="10.0" right="10.0" />
+                                       </padding>
                                     </StackPane>
                                  </children>
                               </VBox>
