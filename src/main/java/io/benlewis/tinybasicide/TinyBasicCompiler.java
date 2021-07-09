@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 
-public class TinyBasicCompiler {
+public abstract class TinyBasicCompiler {
 
     /**
      * Compile Tiny Basic source code into an executable program.

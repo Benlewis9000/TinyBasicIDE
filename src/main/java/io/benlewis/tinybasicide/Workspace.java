@@ -20,32 +20,16 @@ public class Workspace {
         return Paths.get(rootPath);
     }
 
-    public void setRootPath(Path rootPath) {
-        this.rootPath = rootPath.toString();
-    }
-
     public Path getGccCompilerPath() {
         return Paths.get(gccCompilerPath);
-    }
-
-    public void setGccCompilerPath(Path gccCompilerPath) {
-        this.gccCompilerPath = gccCompilerPath.toString();
     }
 
     public Path getTbCompilerPath() {
         return Paths.get(tbCompilerPath);
     }
 
-    public void setTbCompilerPath(Path tbCompilerPath) {
-        this.tbCompilerPath = tbCompilerPath.toString();
-    }
-
     public String getTbSource() {
         return tbSource;
-    }
-
-    public void setTbSource(String tbSource){
-        this.tbSource = tbSource;
     }
 
     /**

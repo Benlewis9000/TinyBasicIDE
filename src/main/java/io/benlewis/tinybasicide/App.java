@@ -20,9 +20,7 @@ public class App extends Application {
     private Scene editorScene;
     private FXMLLoader editorLoader;
     private Process program;
-
     private Workspace workspace = null;
-
     private ProgramStatus programStatus = ProgramStatus.NONE;
 
     public App(){

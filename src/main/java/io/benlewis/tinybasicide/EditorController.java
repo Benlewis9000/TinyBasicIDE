@@ -29,12 +29,6 @@ public class EditorController implements Initializable {
     @FXML
     private Button buttonRun;
     @FXML
-    private Button buttonLoad;
-    @FXML
-    private Button buttonSave;
-    @FXML
-    private Button buttonKill;
-    @FXML
     private TextArea textAreaSource;
     @FXML
     private TextArea textAreaProgram;
@@ -50,11 +44,6 @@ public class EditorController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        // TODO: delete, for faster testing
-        textFieldWorkingDir.setText("C:\\Users\\benja\\Desktop\\JnaTest\n");
-       /* textFieldGccCompiler.setText("C:\\Qt\\Tools\\mingw810_64\\bin\\x86_64-w64-mingw32-gcc.exe");
-        textFieldTbCompiler.setText("C:\\Users\\benja\\source\\repos\\TinyBASIC_Compiler\\x64\\Debug\\TinyBASIC_Compiler.exe");*/
 
         // Load monospaced font
         Font mono = Font.loadFont(App.class.getResourceAsStream("/JetBrainsMono-Regular.ttf"), 16);
@@ -206,6 +195,9 @@ public class EditorController implements Initializable {
     void buttonLoadAction(){
 
         resetFeedback();
+
+        // Reset program status
+        App.getInstance().setProgramStatus(App.ProgramStatus.NONE);
 
         // Get path to workspace
         String pathStr = textFieldWorkingDir.getText();
