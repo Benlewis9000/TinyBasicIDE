@@ -22,3 +22,5 @@ The Tiny Basic IDE offers a streamlined scripting experience for writing Tiny Ba
 5. Compile your script. See the compiler output feed for info.
 6. Run the compiled executable. See the output in the program output feed.
 7. Kill the program as desired if it does not stop running itself.
+
+![Tiny Basic IDE demo](tiny-basic-ide-demo.png)
